@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import com.patofch.rickandmorty.feature_character.presentation.CharactersScreen
+import com.patofch.rickandmorty.presentation.CharactersScreen
 import com.patofch.rickandmorty.ui.theme.RickAndMortyTheme
 import dagger.hilt.android.AndroidEntryPoint
 
