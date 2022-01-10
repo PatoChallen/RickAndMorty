@@ -24,7 +24,7 @@ class CharacterViewModel @Inject constructor(
 
     private var job: Job? = null
     init {
-        getCharacters()
+//        getCharacters()
     }
 
     fun getMoreCharacters() {
