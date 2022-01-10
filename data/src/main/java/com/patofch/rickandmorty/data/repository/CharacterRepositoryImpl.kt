@@ -1,7 +1,7 @@
 package com.patofch.rickandmorty.data.repository
 
-import android.util.Log
 import com.patofch.rickandmorty.data.data_source.api.CharacterService
+import com.patofch.rickandmorty.data.data_source.api.NetworkController
 import com.patofch.rickandmorty.data.data_source.api.model.CharacterApiEntityMapper
 import com.patofch.rickandmorty.data.data_source.db.CharacterDao
 import com.patofch.rickandmorty.data.data_source.db.model.CharacterDtoEntity
@@ -12,14 +12,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
-import javax.inject.Named
 
 internal class CharacterRepositoryImpl @Inject constructor(
     private val characterService: CharacterService,
     private val characterDao: CharacterDao,
     private val dtoEntityMapper: CharacterEntityMapper<CharacterDtoEntity>,
     private val apiEntityMapper: CharacterApiEntityMapper,
-    @Named("NetworkState") private val networkConnected: Boolean
+    private val networkController: NetworkController
 ) : CharacterRepository {
 
     private var pageCount = 1
@@ -35,17 +34,19 @@ internal class CharacterRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getCharacterById(id: Int): Character {
-        return dtoEntityMapper.mapToCharacter(
-            apiEntityMapper.mapToCharacterDtoEntity(
-                characterService.getCharacterById(id)
+    override suspend fun getCharacterById(id: Int): Character? {
+        if (networkController.isNetworkConnected()) {
+            return dtoEntityMapper.mapToCharacter(
+                apiEntityMapper.mapToCharacterDtoEntity(
+                    characterService.getCharacterById(id)
+                )
             )
-        )
+        }
+        return null
     }
 
     override suspend fun loadMoreCharacters() {
-        if (networkConnected) {
-            val time = System.currentTimeMillis()
+        if (networkController.isNetworkConnected()) {
             try {
                 characterDao.insertCharacters(
                     characterService.getCharacters(pageCount).apply {
@@ -60,8 +61,6 @@ internal class CharacterRepositoryImpl @Inject constructor(
                     }
                 )
             } catch (e: Exception) {
-                val newTime = System.currentTimeMillis()
-                Log.e("TAG", "loadMoreCharacters: ${ (time - newTime) / 1000 }")
                 e.printStackTrace()
             }
         }
@@ -74,9 +73,8 @@ internal class CharacterRepositoryImpl @Inject constructor(
         type: String?,
         gender: String?
     ): Flow<List<Character>> {
-        return if (networkConnected) {
+        return if (networkController.isNetworkConnected()) {
             flow {
-                val time = System.currentTimeMillis()
                 try {
                     emit(
                         characterService.getCharacters(
@@ -92,8 +90,6 @@ internal class CharacterRepositoryImpl @Inject constructor(
                         }
                     )
                 } catch (e: Exception) {
-                    val newTime = System.currentTimeMillis()
-                    Log.e("TAG", "getCharactersFilterBy: ${ (time - newTime) / 1000 }")
                     e.printStackTrace()
                 }
             }

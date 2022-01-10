@@ -1,6 +1,5 @@
 package com.patofch.rickandmorty.domain.use_case
 
-import com.google.common.base.Verify
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
@@ -34,7 +33,7 @@ class GetCharacterByIdTest {
             whenever(characterRepository.getCharacterById(fakeId)).doReturn(character)
             val character = getCharacterById(fakeId)
 
-            Verify.verify(character.id == fakeId)
+            assert(character!!.id == fakeId)
             verify(characterRepository).getCharacterById(fakeId)
         }
     }

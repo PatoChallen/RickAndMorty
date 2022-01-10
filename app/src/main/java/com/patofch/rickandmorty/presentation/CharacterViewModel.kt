@@ -13,12 +13,10 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import javax.inject.Named
 
 @HiltViewModel
 class CharacterViewModel @Inject constructor(
-    private val characterUseCases: CharacterUseCases,
-    @Named("NetworkState") private val networkConnected: Boolean
+    private val characterUseCases: CharacterUseCases
 ) : ViewModel() {
 
     private val _characters: MutableState<List<Character>> = mutableStateOf(listOf())
@@ -26,7 +24,6 @@ class CharacterViewModel @Inject constructor(
 
     private var job: Job? = null
     init {
-        Log.e("NetworkState", "network connected: $networkConnected")
         getCharacters()
     }
 
@@ -40,7 +37,6 @@ class CharacterViewModel @Inject constructor(
         job?.cancel()
         job = viewModelScope.launch {
             characterUseCases.getCharacters().collect {
-                Log.e("TAG", "getCharacters collect ${it.size}")
                 _characters.value = it
             }
         }

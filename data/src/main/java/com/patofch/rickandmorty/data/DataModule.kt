@@ -1,6 +1,7 @@
 package com.patofch.rickandmorty.data
 
 import com.patofch.rickandmorty.data.data_source.api.CharacterService
+import com.patofch.rickandmorty.data.data_source.api.NetworkController
 import com.patofch.rickandmorty.data.data_source.api.NetworkModule
 import com.patofch.rickandmorty.data.data_source.api.model.CharacterApiEntityMapper
 import com.patofch.rickandmorty.data.data_source.db.CharacterDao
@@ -58,14 +59,14 @@ object DataModule {
         characterDao: CharacterDao,
         dtoEntityMapper: CharacterEntityMapper<CharacterDtoEntity>,
         apiEntityMapper: CharacterApiEntityMapper,
-        @Named("NetworkState") networkConnected: Boolean
+        networkController: NetworkController
     ): CharacterRepository {
         return CharacterRepositoryImpl(
             characterService = characterService,
             characterDao = characterDao,
             dtoEntityMapper = dtoEntityMapper,
             apiEntityMapper = apiEntityMapper,
-            networkConnected = networkConnected
+            networkController = networkController
         )
     }
 }

@@ -24,10 +24,10 @@ class GetCharactersFilterByTest {
     @Test
     fun `verify getCharacters invoke calls characterRepository getCharacters`() {
         val fakeName = "fakeName"
-        val fakeStatus = "fake"
-        val fakeSpecies = "fake"
-        val fakeType = "fake"
-        val fakeGender = "fake"
+        val fakeStatus = "fakeStatus"
+        val fakeSpecies = "fakeSpecies"
+        val fakeType = "fakeType"
+        val fakeGender = "fakeGender"
 
         runBlocking {
             getCharactersFilterBy(

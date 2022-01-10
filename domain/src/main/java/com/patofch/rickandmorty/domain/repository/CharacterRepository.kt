@@ -7,7 +7,7 @@ interface CharacterRepository {
 
     suspend fun getCharacters(): Flow<List<Character>>
 
-    suspend fun getCharacterById(id: Int): Character
+    suspend fun getCharacterById(id: Int): Character?
 
     suspend fun loadMoreCharacters()
 

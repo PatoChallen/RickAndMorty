@@ -9,5 +9,5 @@ class GetCharacterById(
 
     suspend operator fun invoke(
         id: Int
-    ): Character = characterRepository.getCharacterById(id)
+    ): Character? = characterRepository.getCharacterById(id)
 }
